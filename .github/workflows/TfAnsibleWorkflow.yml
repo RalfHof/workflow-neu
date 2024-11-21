@@ -1,0 +1,81 @@
+name: Terraform workflow
+
+on: [push, workflow_dispatch]
+
+jobs:
+  apply:
+    name: Terraform apply
+    runs-on: ubuntu-latest #runner
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWSRalf }}
+          aws-secret-access-key: ${{secrets.awsRalf1 }}
+          aws-region: eu-central-1
+    
+    #   - name: Change Directory
+    #     run: cd terraform
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply -auto-approve
+
+      - name: Ansible installieren
+        run: sudo apt-get install -y ansible
+
+      - name: Generiere Ansible Inventory
+        working-directory: ./terraform
+        run: |
+          echo "[webserver]" > ../ansible/ec2Maschinen.ini
+          terraform output -json >> meineOutputs.json
+          jq -r ".instance_public_ips.value[]" meineOutputs.json >> ../ansible/ec2Maschinen.ini
+
+      - name: Copy SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/terraformKey.pem
+          chmod 600 ~/.ssh/terraformKey.pem
+
+      - name: Ansible Playbook ausführen
+        working-directory: ./ansible
+        run: ansible-playbook -i ec2Maschinen.ini meinPlaybook.yml
+
+  destroy:
+    name: Terraform destroy
+    runs-on: ubuntu-latest #runner
+    if: github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWSRalf }}
+          aws-secret-access-key: ${{secrets.awsRalf1 }}
+          aws-region: eu-central-1
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: ./terraform
+        run: terraform destroy -auto-approve

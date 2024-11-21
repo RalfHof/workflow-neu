@@ -1,0 +1,5 @@
+Adhoc Befehle
+ansible all -i meineInventory.ini -m ping --private-key  ~/.ssh/terraformKey.pem -u ec2-user
+ansible all -i meineInventory.ini -m shell -a "mkdir MarcelsOrdner" --private-key  ~/.ssh/terraformKey.pem -u ec2-user
+ansible all -i meineInventory.ini -m copy -a "src=./befehle.txt dest=~/ausDerAnsible.txt" --private-key  ~/.ssh/terraformKey.pem -u ec2-user
+ansible-playbook -i meineInventory.ini meinPlaybook.yml --private-key ~/.ssh/terraformKey.pem -u ec2-user
