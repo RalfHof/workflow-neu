@@ -23,6 +23,7 @@ jobs:
           aws-region: eu-central-1
     
     #   - name: Change Directory
+    
     #     run: cd terraform
 
       - name: Terraform Init
