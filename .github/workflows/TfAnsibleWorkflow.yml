@@ -83,7 +83,8 @@ jobs:
       # Build Express App Docker Image
       - name: Build Docker Image for Express App
         run: |
-          docker build -t express-app .
+          working-directory: ./terraform
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/express-app:latest .
 
       # Docker Hub Login
       - name: Log in to Docker Hub
