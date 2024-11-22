@@ -9,15 +9,10 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      
-      - name: Send custom event details to a Slack workflow
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-         webhook: ${{secrets.SLACK_WEBHOOK_URL}}
-         webhook-type: webhook-trigger
-         payload: |
-            text: "Pipeline wurde soeben gestartet"
 
+      #Slack -Anfang des Jobs
+      #Slack -anFailure
+      
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -32,6 +27,7 @@ jobs:
           aws-region: eu-central-1
     
     #   - name: Change Directory
+    
     #     run: cd terraform
 
       - name: Terraform Init
@@ -62,20 +58,15 @@ jobs:
         working-directory: ./ansible
         run: ansible-playbook -i ec2Maschinen.ini meinPlaybook.yml
 
-      - name: Send custom event details to a Slack workflow
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{secrets.SLACK_WEBHOOK_URL}}
-          webhook-type: webhook-trigger
-          payload: |
-            text: "Pipeline wurde beendet"
-
   destroy:
     name: Terraform destroy
     runs-on: ubuntu-latest #runner
     if: github.event_name == 'workflow_dispatch'
     
     steps:
+      - name: send Slack Notification
+        run: |
+        
       - name: Checkout repo
         uses: actions/checkout@v3
 
