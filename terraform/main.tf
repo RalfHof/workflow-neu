@@ -2,11 +2,7 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-# Deklaration der Docker-Image-Variablen
-variable "docker_image" {
-  description = "Docker image to be used for deployment"
-  type        = string
-}
+
 
 resource "aws_instance" "GithubActionsInstanz" {
   count             = 2
