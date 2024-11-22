@@ -8,6 +8,16 @@ resource "aws_instance" "GithubActionsInstanz" {
   instance_type = "t2.micro"
   key_name = "terraformKey"
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
+
+
+  
+  # Beispiel: Docker-Image verwenden
+  user_data = <<-EOF
+             #!/bin/bash
+             docker run -d ${var.docker_image}
+             EOF
+
+
   tags = {
     Name = "Meine Github Actions Instanz ${count.index}"
   }
