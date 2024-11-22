@@ -1,6 +1,6 @@
 name: Terraform Workflow
 
-on: 
+on:
   [push, workflow_dispatch]
 
 jobs:
@@ -10,11 +10,10 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-
       - name: Send custom event details to a Slack workflow
         uses: slackapi/slack-github-action@v2.0.0
         with:
-          webhook: ${{secrets.SLACK_WEBHOOK_URL}}
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
           payload: |
             text: "Pipeline wurde soeben gestartet"
@@ -28,8 +27,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{secrets.AWSRalf }}
-          aws-secret-access-key: ${{secrets.awsRalf1 }}
+          aws-access-key-id: ${{ secrets.AWSRalf }}
+          aws-secret-access-key: ${{ secrets.awsRalf1 }}
           aws-region: eu-central-1
 
       - name: Terraform Init
@@ -80,7 +79,7 @@ jobs:
           payload: |
             text: "Pipeline ist fehlgeschlagen"
 
-      # Build Express App Docker Image
+      # Build Docker Image for Express App
       - name: Build Docker Image for Express App
         working-directory: ./terraform
         run: |
@@ -119,8 +118,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{secrets.AWSRalf }}
-          aws-secret-access-key: ${{secrets.awsRalf1 }}
+          aws-access-key-id: ${{ secrets.AWSRalf }}
+          aws-secret-access-key: ${{ secrets.awsRalf1 }}
           aws-region: eu-central-1
 
       - name: Terraform Init
@@ -133,6 +132,7 @@ jobs:
 
 
 
-        
+
+
 
 

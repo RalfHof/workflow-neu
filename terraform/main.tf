@@ -2,21 +2,24 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+# Deklaration der Docker-Image-Variable
+variable "docker_image" {
+  description = "Docker image to be used for deployment"
+  type        = string
+}
+
 resource "aws_instance" "GithubActionsInstanz" {
-  count = 2  
-  ami           = "ami-0eddb4a4e7d846d6f"
-  instance_type = "t2.micro"
-  key_name = "terraformKey"
+  count             = 2
+  ami               = "ami-0eddb4a4e7d846d6f"
+  instance_type     = "t2.micro"
+  key_name          = "terraformKey"
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
 
-
-  
-  # Beispiel: Docker-Image verwenden
+  # Docker-Image im User Data verwenden
   user_data = <<-EOF
              #!/bin/bash
              docker run -d ${var.docker_image}
              EOF
-
 
   tags = {
     Name = "Meine Github Actions Instanz ${count.index}"
@@ -24,31 +27,30 @@ resource "aws_instance" "GithubActionsInstanz" {
 }
 
 resource "aws_security_group" "ssh_access" {
-    name = "ssh_access"
-    description = "Allow SSH access"
+  name        = "ssh_access"
+  description = "Allow SSH access"
 
-    ingress { #eingehender Datenverkehr
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    egress{
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    tags = {
-        Name = "SSH Access"
-    }
-  
+  tags = {
+    Name = "SSH Access"
+  }
 }
 
 output "instance_public_ips" {
-    value = aws_instance.GithubActionsInstanz.*.public_ip
+  value = aws_instance.GithubActionsInstanz.*.public_ip
 }
 
 
