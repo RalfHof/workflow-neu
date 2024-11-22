@@ -12,10 +12,16 @@ resource "aws_instance" "GithubActionsInstanz" {
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
 
   # Docker-Image im User Data verwenden
-  user_data = <<-EOF
-             #!/bin/bash
-             docker run -d ${var.docker_image}
-             EOF
+ 
+
+
+# Script zum Bauen und Starten des Docker-Containers
+user_data = <<-EOF
+  #!/bin/bash
+  docker build -t nginx:latest ${var.docker_image}
+  docker run -d nginx:latest
+EOF
+
 
   tags = {
     Name = "Meine Github Actions Instanz ${count.index}"
