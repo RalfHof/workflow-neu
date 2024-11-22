@@ -2,7 +2,7 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-# Deklaration der Docker-Image-Variable
+# Deklaration der Docker-Image-Variablen
 variable "docker_image" {
   description = "Docker image to be used for deployment"
   type        = string
@@ -52,11 +52,3 @@ resource "aws_security_group" "ssh_access" {
 output "instance_public_ips" {
   value = aws_instance.GithubActionsInstanz.*.public_ip
 }
-
-
-## terraform init
-## terraform plan
-## terraform apply
-
-
-## terraform destroy
