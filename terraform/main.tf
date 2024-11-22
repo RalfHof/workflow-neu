@@ -7,9 +7,10 @@ provider "aws" {
 resource "aws_instance" "GithubActionsInstanz" {
   count             = 2
   ami               = "ami-0eddb4a4e7d846d6f"
-  instance_type     = "t2.micro"
+  instance_type     = "t2.small"
   key_name          = "terraformKey"
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
+  associate_public_ip_address = true  # Aktiviert öffentliche IPs für die Instanz
 
   # Docker-Image im User Data verwenden
  
