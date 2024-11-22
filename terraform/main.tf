@@ -12,9 +12,6 @@ resource "aws_instance" "GithubActionsInstanz" {
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
   associate_public_ip_address = true  # Aktiviert öffentliche IPs für die Instanz
 
-  # Docker-Image im User Data verwenden
- 
-
 
 # Script zum Bauen und Starten des Docker-Containers
 user_data = <<-EOF
