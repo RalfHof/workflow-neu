@@ -83,7 +83,7 @@ jobs:
       # Build Express App Docker Image
       - name: Build Docker Image for Express App
         run: |
-          docker build -t ralfhof/express-app:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/express-app:latest .
 
       # Docker Hub Login
       - name: Log in to Docker Hub
@@ -95,13 +95,13 @@ jobs:
       # Push Docker Image to Docker Hub
       - name: Push Docker Image to Docker Hub
         run: |
-          docker push ralfhof/express-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/express-app:latest
 
       # Deploy Docker Image to Terraform-managed instances
       - name: Deploy Docker Image
         working-directory: ./terraform
         run: |
-          terraform apply -var="docker_image=ralfhof/express-app:latest" -auto-approve
+          terraform apply -var="docker_image=${{ secrets.DOCKER_USERNAME }}/express-app:latest" -auto-approve
 
   destroy:
     name: Terraform destroy
