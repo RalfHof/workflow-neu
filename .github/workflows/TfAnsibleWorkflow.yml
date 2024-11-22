@@ -83,7 +83,7 @@ jobs:
       # Build Express App Docker Image
       - name: Build Docker Image for Express App
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/express-app:latest .
+          docker build -t express-app .
 
       # Docker Hub Login
       - name: Log in to Docker Hub
