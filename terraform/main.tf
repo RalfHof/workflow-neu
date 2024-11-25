@@ -52,3 +52,5 @@ resource "aws_security_group" "ssh_access" {
 output "instance_public_ips" {
   value = aws_instance.GithubActionsInstanz.*.public_ip
 }
+
+
